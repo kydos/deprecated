@@ -1,0 +1,1 @@
+run Circle Square "select ShapeFactory.createShape(color, cast(avg(x),int), cast(avg(y),int), shapesize) as NewShape  from ShapeType.win:time(10 sec)"
