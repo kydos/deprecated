@@ -1,0 +1,45 @@
+- A method DomainParticipantFactory.getInstance() should supported w/o requiring
+      the getInstance to get an instance of the ServiceEnvironment. In this
+      case the current thread class loader (provided by Thread.currentThread().getContextClassLoader())
+      should be used to initialize implicitly the environment.
+
+
+- Status classes are not complete. Status management is underspecified and there seems to be
+  some statuses missing such as OnDataAvailable status which seems to completely be missing!
+
+- Event an Statuses should be split into two different packages, namely org.omg.dds.code.status
+  and org.omg.dds.code.event
+
+- History.withKeepLast should accept an integer parameter.
+
+
+- All QoS should provide the following methods:
+
+        /**
+         * Provides an instance of {@link PolicyFactory}.
+         * @return An instance of {@link PolicyFactory}
+         */
+        public abstract PolicyFactory getPolicyFactory();
+
+
+   this method should return:
+
+            this.getEnvironment().getSPI().getPolicyFactory();
+
+  This would greatly simplify the access to the policy factory.
+
+
+- The PolicyFactory is not complete. The factory method to access policies should
+  provide parameters whenever necessary to set some values for constructing the object.
+  This is the case of KeepLast. But to make things worse for some policies this
+  factory method does not even exist!
+
+  Thus we should add methods like:
+
+    public abstract Partition Partition(String partition);
+    public abstract Partition Partition(Iterable<String> partition);
+
+  Notice that policies are algebraic data types. Some of the policies are
+  sum types other are simply product types. Yet they should all be
+  uniformly treated as algebraic data types.
+
