@@ -1,0 +1,101 @@
+2012-04-23  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* src/main/scala/dds/sub/Samples.scala: Changed sample2Data
+	implicit conversion to return an IndexedSeqOptimized as opposed to
+	an Iterator.
+
+	* Updated read/take methods on the DataReader to give access to the
+	sample info along with the sample data. An implicit conversion allows
+	to use the read/take as in the previous API.
+
+	* Moved escalier to Scala v2.9.2
+
+2012-04-04  Julien Enoch
+
+	* Added apply() operations to DataReader and DataWriter.
+
+	* Added management of dds.domainId and dds.partition properties to iShapes demo.
+
+
+2012-04-02  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* Updated ContentFilteredTopic to use Query class so to be consistent to the new C++ DDS API.
+
+
+2012-02-22  Julien Enoch
+
+	* Added missing QoS Policies. 
+
+	* Added apply() operation to *Qos objects with a list of appropriate Policies.
+
+	* Added + and ++ operators to *Qos classes.
+
+	* Updated iShapes demo adding QoS Policies management.
+
+
+2012-02-10  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* Released version 0.3
+
+	* Added file-transfer  example 
+	
+	* Updated examples to use the new QoS DSL
+
+
+
+	* Updated QoS DSL to use case objects as opposed to case classes
+	when appropriate. In addition the various options for a QoS Policy
+	now are nested into the QoS companion.  For example, in place of
+	KeepLastHistory(), now you'll have to use History.KeepLast. Notice
+	that the latter is a singleton.
+
+
+2011-11-21  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* Updated configure to add jar dependency to idlib
+	* Fixed some deprecation warning on Math._ package
+	* Fixed some type erasure-related warnings
+
+2011-07-20  Angelo Corsaro  <angelo@icorsaro.net>
+    * Extended DataReader API with support for take
+    * Extended read/take API with sample/instance/view flags
+
+
+2011-07-20  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* Moved escalier to GitHub!
+
+2011-06-11  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* Released v0.1 of Escalier.
+
+	* Updated the Twitter Example.
+
+2011-06-09  Angelo Corsaro  <angelo@icorsaro.net>
+    * Added automatic compilation of IDL files as part of
+      a new configure script.
+
+      Updated installation informations.
+
+2011-05-23  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* project/build/EscalierProject.scala: Added to the repo as it was
+	currently missing and causing build errors due to missing
+	dependencies.
+
+2011-05-19  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* Added support for reactive functional programing on DDS
+	DataReader
+
+	* Added DataReader event
+
+	* Added ABOUT, AUTHORS and INSTALL files
+
+2011-05-18  Angelo Corsaro  <angelo@icorsaro.net>
+	* Added ContentFilteredTopics and performed some refactoring/cleanup
+	
+	* Fixed deprecation warning raised by scala 2.9.0
+	
+	* Refactored escalier to use SBT as the standard build-tool
+

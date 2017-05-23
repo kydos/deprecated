@@ -1,0 +1,10 @@
+Escalier is a prototype Scala API (see www.scala-lang.org) for
+OpenSplice DDS (see http://www.opensplice.org).
+
+Escalier is built as a layer above the existing OpenSplice DDS Java
+API and tries to expose the DDS API in a concise and elegant manner
+exploting the nice features of the Scala Programming Language
+
+This is currently work in progress so your feedback and contributions
+are very welcome. Feel free to bounce your ideas and comments to
+angelo@icorsaro.net

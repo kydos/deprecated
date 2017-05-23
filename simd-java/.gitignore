@@ -1,0 +1,37 @@
+# .class files
+*.class
+
+# Log files
+*.log
+
+# jars
+*.jar
+
+# IDE Files
+#   . IntelliJ Idea
+*.iml
+.idea
+.idea_modules
+
+#   . Eclipse files
+.project
+.settings
+.classpath
+
+
+# Maven target
+target
+
+# Libs
+./lib
+./idlib/lib
+
+# SBT Stuff
+./project/target
+./idlib/project/target
+./project/project.target.config-classes
+
+# Emacs Temp Files
+*~
+
+pom.xml

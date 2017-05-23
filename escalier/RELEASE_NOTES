@@ -1,0 +1,51 @@
+Escalier v0.4.2
+=============================================================================
+ * Updated read/take methods on the DataReader to give access to the
+   sample info along with the sample data. An implicit conversion allows
+   to use the read/take as in the previous API.
+
+ * Moved escalier to Scala v2.9.2
+ 
+Escalier v0.4.1
+=============================================================================
+
+ * Updated ContentFilteredTopic to use Query class so to be consistent
+   to the new C++ DDS API
+
+ * Added apply() operations to DataReader and DataWriter:
+     * one with PublisherQos/SubscriberQos parameter
+     * one with Partitions list parameter
+
+ * Added management of dds.domainId and dds.partition properties
+   to iShapes demo
+
+
+Escalier v0.4
+=============================================================================
+
+* Added missing QoS Policies. 
+
+* Added apply() operation to *Qos objects with a list of appropriate Policies.
+  Example of usage:
+     val dwQos = DataWriterQos(Reliability.Reliable, Ownership.Exclusive(3))
+
+* Added + and ++ operators to *Qos classes.
+  Example of usage:
+     var dwQos = DataWriterQos + Reliability.Reliable
+     dwQos += Ownership.Exclusive(3)
+     dwQos ++= (Durability.Transient, TransportPriority(5))
+  Note that such operators return a new *Qos object which is a copy of the original one,
+  with the new Policies overriding the old ones.
+     
+* Updated iShapes demo adding QoS Policies management.
+
+
+Escalier v0.3
+=============================================================================
+
+* Updated the QoS DSL to nest QoS variations into an object. Made object
+  all constant QoS policies -- this will save memory.
+  As a result, in place of using something like "KeepAllHistory()", now
+  you'll have to use History.KeepAll.
+
+* Added a new example that sketches howto do file transfer with DDS

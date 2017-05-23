@@ -1,0 +1,198 @@
+[Intro]
+  This file lists all the issues that I currently have raised with the dds-psm-java as
+  specified by the OMG and that have been addressed by simd-java.
+
+
+ [Modifiable Types]
+   The dds-psm-java introduces modifiable versions for conceptually immutable classes
+   as a way to safe a few object allocations. However this is done for QoS which
+   are not changed so often and that are overall very "thin" object.
+   The proposed resolution is to get rid of this objects and to ensure that
+   we only provide value types when needed.
+
+[Superfluous "QoSPolicy" Suffix]
+   The dds-psm-java uses a superfluous Policy suffix to name the DDS policies
+   which themselves are already included in a "policy" namespace. This
+   suffix should be removed.
+
+[Bootstrap]
+   The boostrap class is a pain for users which is in place only to allow
+   users to run 2 different DDS implementations on the same application.
+   As this is by no means a common use case, the bootstrap should be
+   removed and the resulting API should be simplified.
+
+
+[QoSPolicy]
+
+   - ID Class
+   Why is there an ID class on the QoSPolicy class? All we need to provide
+   is a pre-defined ID for the policy class!
+   All we need is a <getId> and <getName> method.
+
+   - Comparable
+   All RxO Policies have to implement the Comparable interface. This is
+   pretty logical as for this QoS Policies it has to be established
+   a total order.
+
+
+  - Cloneable interface
+  No need to implement the interface once the mutable pkg is removed
+
+[Constants and Boostrap object]
+   Constant values such as the infinite duration, etc. should be defined
+   by the standard as opposed than the implementation.
+
+
+[Spurious import]
+   The dds-psm-java makes use of import as a way to take care of the
+   @link directive on Javadoc. This is not a good practice and it
+   is better to use the fully qualified type name on the @link javadoc
+   directive
+
+[QoS Classes (TopicQos, DataWriterQos, etc.]
+    - The absence of a DSL for facilitating the correct creation of QoS in the
+    dds-psm-java introduces potential for errors. The DSL should be
+    added as in the dds-psm-cxx as well as on the simd-java.
+    The DSL should look like:
+
+    TopicQos topicQos =
+        (new TopicQos())
+            .with(Reliability.Reliable(), Durability.Transient());
+
+
+    This is also legal:
+
+    TopicQos topicQos =
+        (new TopicQos())
+            .with(Reliability.Reliable())
+            .with(Durability.Transient());
+
+    - These class should implement the Comparable interface as they need to
+    provide a total order... Otherwise how can one do RxO?
+
+
+[Entity QoS]
+   This class does not seem very useful for the DDS user. It might be
+   more useful for the DDS implementor.... Suggestion is to remove it
+   from the public API
+
+[Entity]
+   This class provides some generic methods that seem of doubtful usefulness
+   but then on the other end open up a door for messing up with the invariant
+   of a type or at least raising runtime errors. For instance via the
+   Entity type I can add a non-applicable QoS policy to a DDS entity --
+   this seems weakening the API.
+
+[DomainEntity]
+   What is the value of having this class? It should be removed and
+   the getParent method should be migrated to the Entity class.
+
+[DataReader]
+   The read API currently seems a bit too complicated. In some in some instances
+   it provides part of the results as a return value and the rest by means of arguments.
+   This does not feel right.
+
+   The API does not provide a way of deciding if one wants to read/take only valid
+   data. This is a remark true in general for DDS which needs to be fixed for all PSM
+   as well as for the PIM!
+
+   The following methods on the DataReader interface are superfluous:
+    - cast
+    - createSample
+
+
+[Status]
+   The org.omg.dds.core.status.Status class currently extends the java.util.EventObject.
+   The issue I have with this is that a status and an event are to different concepts.
+   A status represents a continuous value or set of values which are always defined,
+   while an event represents and happening. For instance an event could be used to notify
+   the change of status but not the status itself.
+
+   That said the refactoring suggested is to re-organize the current status types
+   so to clearly distinguish what is are statuses and what are the events. As such,
+   all the status currently defined should remove reference to the source. Why?
+   Because the statuses are retrieved from the source thus it is kind of silly to
+   add back the source on the communication status.
+
+   Let me give you an example ("dr" below is a DataReader):
+
+   RequestedDeadlineMissedStatus s = dr.getRequestedDeadlineMissedStatus();
+
+    // this give back the reader we already know, thus it is not real useful
+    // information which should simply be removed.
+    s.source())
+
+    BTW the status types as well as the relative accessor methods should
+    drop the trailing "Status" as it is not so informative.
+
+    That said, we should add an event type associated to each status defined like this:
+
+    class RequestedDeadlineMissedEvent {
+        private RequestedDeadlineMissed status;
+        private DataReader source;
+
+        //... useful methods
+    }
+
+
+    The event type is the one that should be used as a parameter of the listener methods.
+
+    Finally, it is worth noticing that the suggested refactoring will fix the
+    DataAvailableStatus anomaly. This type currently defined as a status is actually
+    an event and as such should be treated. So where is the anomaly, for this status
+    there are no methods on the data reader and there is really no status information
+    such as saying... Yes there are 15 new samples or something like this.
+
+
+[DataWriter]
+   The methods that access the communication statuses should simply return
+   an object as opposed to also require it as an argument. As the Status
+   is immutable there is no risk in the client code changing it, thus no copies
+   required!
+
+
+[Status Management]
+   The dds-psm-java currently passes statuses via collections. However this
+   does not make it neither efficient nor simple to represent collections
+   of related statuses, such as the Read Status, etc.
+
+   The suggestion is to add a ReadState as currently present on the dds-psm-cxx
+   to simplify the API and make it simpler to support the most common use cases.
+
+===============================================================================
+===============================================================================
+===============================================================================
+
+[2011.09.22 New Issues]
+
+[Bucket Accessors] Post an issue on avoiding side-effects on the API.
+
+[DataReader] The data reader should return a List as opposed to a ListIterator
+when using a List as a argument.
+
+[Listener]
+
+Problem:
+ The name of the classes DataReaderAdapter/DataWriterAdapter are misleading since what
+ they are really providing are listeners with some default behaviour.
+
+Resolution:
+ Rename the classes DataReaderAdapter/DataWriterAdapter to
+ SimpleDataReaderListener and SimpleDataWriterListener.
+
+ For the SimpleDataReaderListener one could implement trivially all
+  the method but the one that notifies the availability of data,
+  e.g. <onDataAvailable>
+
+
+
+[Sample]
+Problem:
+  The class does not provide an accessor method to verify wether the sample is valid or not.
+
+Resolution:
+  Add an < isValid () : Boolean >method;
+
+===============================================================================
+===============================================================================
+===============================================================================

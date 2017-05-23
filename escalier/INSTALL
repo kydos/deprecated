@@ -1,0 +1,24 @@
+[[ Dependency ]]
+
+To be able to use Escalier you need to have installed the following
+software on your machine:
+
+   - OpenSplice DDS >= v5.x (http://www.opensplice.org)
+   - Simple Build Tool (SBT) v0.11 (https://github.com/harrah/xsbt/wiki/Getting-Started-Setup)
+
+
+[[ Setup ]]
+
+Make sure that SBT and OpenSplice DDS are properly installed and
+configured. At this point you should do the following, from the
+Escalier home directory:
+
+$ ./configure
+$ sbt compile
+$ sbt publish-local [if you want to use escalier from the local ivy2 repo]
+$ sbt doc
+
+At this point you'll have the built and packaged Escalier and you will
+also have generated the documentation. At this point you are ready to
+run some of the examples you write your own application.
+

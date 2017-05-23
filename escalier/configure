@@ -1,0 +1,10 @@
+#!/bin/bash
+
+mkdir -p lib  &>/dev/null
+cp $OSPL_HOME/jar/dcpssaj.jar ./lib
+echo "Now you should do:"
+echo "\$ sbt compile"
+echo ""
+echo "Have fun with Escalier!"
+echo ""
+

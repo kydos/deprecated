@@ -1,0 +1,140 @@
+2012-02-10  Angelo  <angelo@icorsaro.net>
+
+	* configure.bat: Added configure for Windows platform, thanks to
+	Michael Esemplare for contributing this.
+
+2012-01-31  Angelo  <angelo@icorsaro.net>
+
+	* .gitignore: Ignore .log files
+	* Added authors, thanks and licensing files
+
+2012-01-31  Angelo  <angelo@icorsaro.net>
+
+	* Added support for OpenSplice DDS v5.x and v6.x
+
+2011-10-07  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* Moved the IDL files to another project that takes care of
+	building a jar.
+
+	* Added SBT build files to build simd-java as this will make it
+	easier to use scala at least for writing tests.
+
+2011-10-12 Angelo Corsaro <angelo@icorsaro.net>
+   * src/main/java/org/omg/dds/sub/ReadState.java: Removed spurious imports.
+
+2011-09-30  Angelo Corsaro  <angelo@icorsaro.net>
+   * src/main/java/org/opensplice/webcast: Added examples from
+     the Webcast hosted on the 29 Sept. 2011.
+
+2011-09-29  Angelo Corsaro  <angelo@icorsaro.net>
+
+    * Implemented DataReaderQos + DataWriter Qos
+    * Fixed support for DataReader Listeners
+
+2011-08-02  Angelo Corsaro  <angelo@icorsaro.net>
+    * src/main/java/org/omg/dds/core/policy/LatencyBudget.java:
+    Added ctor that accepts a <long> duration and a TimeUnit.
+
+	* src/main/java/org/omg/dds/core/AbstractTime.java:
+	As the class is immutable fields needed to be final -- issue fixed.
+
+    * src/main/java/org/omg/dds/core/Time.java:
+    The invalid time implementation was not optimal as returned a new
+    object each time. Fixed the implementation to make the InvalidTime a singleton.
+
+    * src/main/java/org/omg/dds/sub/ReadState.java:
+    New class that encapsulates the Sample, Instance and View state.
+
+     * src/main/java/org/omg/dds/sub/DataReader.java:
+     Updated API to take advantage of the ReadState class
+     instead of having to use individual collections of Sample,
+     Instance and View state. As an example, the original dds-psm-java
+     method:
+
+      public void take(
+            List<Sample<TYPE>> samples,
+            int maxSamples,
+            Collection<SampleState> sampleStates,
+            Collection<ViewState> viewStates,
+            Collection<InstanceState> instanceStates);
+
+
+      Becomes:
+
+       public void take(
+            List<Sample<TYPE>> samples,
+            int maxSamples,
+            ReadState state);
+
+
+       Furthermore, since the ReadState provides default for
+       the most commonly used states, a take for new data
+       would become:
+
+       dr.take(samples, maxSamples, ReadState.NewData());
+
+     * src/main/java/org/omg/dds/sub/InstanceState.java
+     * src/main/java/org/omg/dds/sub/ViewState.java
+     * src/main/java/org/omg/dds/sub/SampleState.java
+	Added ANY state.
+	
+
+     * src/main/java/org/opensplice/psm/java/sub/OSPLDataReader.java
+     * src/main/java/org/opensplice/psm/java/sub/OSPLSample.java
+	Updated to reflects the changes on the DataReader.
+
+
+
+2011-08-01  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* src/main/java/org/omg/dds/core/AbstractTime.java:
+	* src/main/java/org/omg/dds/core/Duration.java:
+	* src/main/java/org/omg/dds/core/Time.java:
+
+	 Refactored implementation to be aligned with the definition of
+	Time/Duration found in the  DDSI Specification as opposed to the
+	DDS spec. Apparently the DDSI and DDS specification use slightly
+	differetn defitions of the two types for what conerns maximum
+	values. This implementation takes not as a reference what defined
+	in the DDSI spec.
+	
+	* src/main/java/org/omg/dds/core/policy/DestinationOrder.java:
+	* src/main/java/org/omg/dds/core/policy/Durability.java:
+	* src/main/java/org/omg/dds/core/policy/Reliability.java:
+	Refactored the code to address some of the issues found by QACheck.
+
+
+2011-07-28  Angelo Corsaro  <angelo@icorsaro.net>
+
+	* src/main/idl/ping.idl:
+	* src/main/java/org/opensplice/demo/ping/PingPublisher.java:
+	* src/main/java/org/opensplice/demo/ping/PingSubscriber.java:
+	Added simple Ping Example that shows foundation of the new Java
+	API.
+
+	* configure: File that takes care of compiling the IDL files
+	required by the examples.
+
+	* src/main/java/org/omg/dds/domain/DomainParticipant.java:
+	* src/main/java/org/omg/dds/pub/DataWriter.java:
+	* src/main/java/org/omg/dds/pub/Publisher.java:
+	* src/main/java/org/omg/dds/sub/DataReader.java:
+	* src/main/java/org/omg/dds/sub/Subscriber.java
+	* src/main/java/org/omg/dds/topic/TopicDescription.java: Removed
+	all methods that required a qosLibrary as this is deprecated on
+	the spec.
+
+
+	* src/main/java/org/opensplice/psm/java/domain/OSPLDomainParticipant.java:
+	* src/main/java/org/opensplice/psm/java/pub/OSPLDataWriter.java:
+	* src/main/java/org/opensplice/psm/java/pub/OSPLPublisher.java:
+	* src/main/java/org/opensplice/psm/java/sub/OSPLDataReader.java:
+	* src/main/java/org/opensplice/psm/java/sub/OSPLSample.java:
+	* src/main/java/org/opensplice/psm/java/sub/OSPLSubscriber.java:
+	* src/main/java/org/opensplice/psm/java/topic/OSPLTopic.java:
+	Major refactoring to use the generic writer/reader
+	FooDataWriter/Reader in place of using reflection on the peer.
+
+
+

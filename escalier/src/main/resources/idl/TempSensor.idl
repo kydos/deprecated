@@ -1,0 +1,12 @@
+module org {
+  module opensplice {
+    module demo {
+      struct TempSensor {
+	    long id;
+	    float temp;
+	    float hum;
+      };
+      #pragma keylist TempSensor id
+    };
+  };
+};

@@ -1,0 +1,14 @@
+module org {
+    module opensplice {
+        module perf {
+            struct SimplePayload {
+                long count;
+            };
+            #pragma keylist SimplePayload
+            struct SeqPayload {
+                sequence<octet> data;
+            };
+            #pragma keylist SeqPayload
+        };
+    };
+};
